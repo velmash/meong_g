@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:meong_g/home_screen.dart';
+import 'package:meong_g/screens/home_navigation_bar.dart';
 
 void main() {
-  runApp(MaterialApp(home: HomeScreen()));
+  runApp(MaterialApp(initialRoute: '/', routes: {'/': (context) => HomeNavigationBar()}));
 }
