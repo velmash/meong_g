@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meong_g/App/app_images.dart';
+import 'package:meong_g/App/app_styles.dart';
 import 'package:meong_g/screens/history_screen.dart';
 import 'package:meong_g/screens/home_screen.dart';
 import 'package:meong_g/screens/my_page_screen.dart';
@@ -17,9 +17,9 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
   @override
   Widget build(BuildContext context) {
     final navItems = [
-      {'icon': AppImages.history, 'label': '기록'},
-      {'icon': AppImages.home, 'label': '홈'},
-      {'icon': AppImages.profile, 'label': '마이페이지'},
+      {'icon': AppStyles.history, 'label': '기록'},
+      {'icon': AppStyles.home, 'label': '홈'},
+      {'icon': AppStyles.profile, 'label': '마이페이지'},
     ];
 
     return Scaffold(
@@ -78,9 +78,19 @@ class _NavigationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isSelected
-        ? const Color(0xFF5233FB)
-        : const Color(0xFF7A797D);
+    final color = isSelected ? AppStyles.primary : AppStyles.gray500;
+
+    final textStyle = isSelected
+        ? const TextStyle(
+            color: AppStyles.primary,
+            fontSize: 14,
+            fontWeight: FontWeight.w700,
+          )
+        : const TextStyle(
+            color: AppStyles.gray500,
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+          );
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -88,7 +98,7 @@ class _NavigationItem extends StatelessWidget {
         const SizedBox(height: 16),
         Image.asset(imagePath, width: 28, height: 28, color: color),
         const SizedBox(height: 6),
-        Text(label, style: TextStyle(color: color)),
+        Text(label, style: textStyle),
       ],
     );
   }
