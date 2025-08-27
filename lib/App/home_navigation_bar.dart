@@ -23,6 +23,7 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
     ];
 
     return Scaffold(
+      extendBody: true,
       backgroundColor: Colors.black,
       bottomNavigationBar: ClipRRect(
         borderRadius: const BorderRadius.only(
@@ -58,7 +59,7 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
       ),
       body: <Widget>[
         const HistoryScreen(),
-        const HomeScrenn(),
+        const HomeScreen(),
         const MyPageScreen(),
       ][currentPageIndex],
     );
