@@ -19,7 +19,7 @@ class KakaoMapViewFactory: NSObject, FlutterPlatformViewFactory {
     }
 }
 
-class KakaoFlutterMapView: NSObject, FlutterPlatformView, MapControllerDelegate {
+class KakaoFlutterMapView: NSObject, FlutterPlatformView {
     private var mapViewContainer: KMViewContainer
     private var mapController: KMController?
     private var initialLat: Double?
@@ -36,6 +36,8 @@ class KakaoFlutterMapView: NSObject, FlutterPlatformView, MapControllerDelegate 
             height: max(frame.height, 100)
         )
         
+        print("📩 Received args: \(args ?? "nil")")
+        
         self.mapViewContainer = KMViewContainer(frame: adjustedFrame)
         
         if let argsDict = args as? [String: Any],
@@ -44,6 +46,8 @@ class KakaoFlutterMapView: NSObject, FlutterPlatformView, MapControllerDelegate 
             self.initialLat = lat
             self.initialLon = lon
         }
+        
+        print("📌 initialLat: \(self.initialLat), initialLon: \(self.initialLon)")
         
         super.init()
         
@@ -116,17 +120,7 @@ class KakaoFlutterMapView: NSObject, FlutterPlatformView, MapControllerDelegate 
         print("⚠️ Engine Deactivated")
     }
     
-    func addViewsSucceeded() {
-        print("✅ Views Added Successfully")
-        isViewAdded = true
-        
-        // 약간의 지연 후 카메라 설정
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.setupInitialCamera()
-        }
-    }
-    
-    func addViewsFailed(_ errorCode: Int, desc: String) {
+    func addViewFailed(_ errorCode: Int, desc: String) {
         print("❌ Add Views Failed: \(errorCode) - \(desc)")
         
         // 뷰 추가 실패시 다시 시도
@@ -151,7 +145,35 @@ class KakaoFlutterMapView: NSObject, FlutterPlatformView, MapControllerDelegate 
         }
     }
     
-    internal func addViews() {
+    private func setupInitialCamera() {
+        guard let mapController = self.mapController,
+              let lat = self.initialLat,
+              let lon = self.initialLon else {
+            print("❌ Missing mapController or coordinates")
+            return
+        }
+        
+        guard let mapView = mapController.getView("map") as? KakaoMap else {
+            print("❌ Failed to get mapview")
+            // 맵뷰를 가져오지 못했다면 잠시 후 다시 시도
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.setupInitialCamera()
+            }
+            return
+        }
+        
+        print("📍 Setting up camera for coordinates: \(lat), \(lon)")
+        
+        let targetPoint = MapPoint(longitude: lon, latitude: lat)
+        let cameraUpdate = CameraUpdate.make(target: targetPoint, zoomLevel: 15, mapView: mapView)
+        
+        mapView.moveCamera(cameraUpdate)
+        print("✅ Camera moved to: \(lat), \(lon)")
+    }
+}
+
+extension KakaoFlutterMapView: MapControllerDelegate {
+    func addViews() {
         guard let mapController = self.mapController else {
             print("❌ MapController is nil")
             return
@@ -181,7 +203,7 @@ class KakaoFlutterMapView: NSObject, FlutterPlatformView, MapControllerDelegate 
         mapController.addView(mapviewInfo)
     }
     
-    private func setupInitialCamera() {
+    func addViewSucceeded(_ viewName: String, viewInfoName: String) {
         guard let mapController = self.mapController,
               let lat = self.initialLat,
               let lon = self.initialLon else {
@@ -189,7 +211,7 @@ class KakaoFlutterMapView: NSObject, FlutterPlatformView, MapControllerDelegate 
             return
         }
         
-        guard let mapView = mapController.getView("mapview") as? KakaoMap else {
+        guard let mapView = mapController.getView("map") as? KakaoMap else {
             print("❌ Failed to get mapview")
             // 맵뷰를 가져오지 못했다면 잠시 후 다시 시도
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
