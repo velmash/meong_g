@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io' show Platform;
 
-import 'package:meong_g/kakao_map_view.dart';
+import 'package:meong_g/presentations/home/kakao_map_view.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

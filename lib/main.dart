@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meong_g/App/home_navigation_bar.dart';
 
 void main() {
   runApp(
-    MaterialApp(
-      theme: ThemeData(fontFamily: "Pretendard"),
-      initialRoute: '/',
-      routes: {'/': (context) => HomeNavigationBar()},
+    ProviderScope(
+      child: MaterialApp(
+        theme: ThemeData(fontFamily: "Pretendard"),
+        initialRoute: '/',
+        routes: {'/': (context) => HomeNavigationBar()},
+      ),
     ),
   );
 }

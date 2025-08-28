@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:meong_g/App/app_styles.dart';
-import 'package:meong_g/screens/history_screen.dart';
-import 'package:meong_g/screens/home_screen.dart';
-import 'package:meong_g/screens/my_page_screen.dart';
+import 'package:meong_g/presentations/history/history_screen.dart';
+import 'package:meong_g/presentations/home/home_screen.dart';
+import 'package:meong_g/presentations/my_page/my_page_screen.dart';
 
 class HomeNavigationBar extends StatefulWidget {
   const HomeNavigationBar({super.key});
