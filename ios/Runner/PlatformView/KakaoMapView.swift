@@ -17,6 +17,10 @@ class KakaoMapViewFactory: NSObject, FlutterPlatformViewFactory {
     ) -> FlutterPlatformView {
         return KakaoFlutterMapView(frame: frame, viewId: viewId, messenger: messenger, args: args)
     }
+    
+    public func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol {
+        return FlutterStandardMessageCodec.sharedInstance()
+    }
 }
 
 class KakaoFlutterMapView: NSObject, FlutterPlatformView {
@@ -36,8 +40,6 @@ class KakaoFlutterMapView: NSObject, FlutterPlatformView {
             height: max(frame.height, 100)
         )
         
-        print("📩 Received args: \(args ?? "nil")")
-        
         self.mapViewContainer = KMViewContainer(frame: adjustedFrame)
         
         if let argsDict = args as? [String: Any],
@@ -46,8 +48,6 @@ class KakaoFlutterMapView: NSObject, FlutterPlatformView {
             self.initialLat = lat
             self.initialLon = lon
         }
-        
-        print("📌 initialLat: \(self.initialLat), initialLon: \(self.initialLon)")
         
         super.init()
         
@@ -82,113 +82,42 @@ class KakaoFlutterMapView: NSObject, FlutterPlatformView {
     }
     
     // MARK: - MapControllerDelegate
-    
-    func authenticationSucceeded() {
-        print("✅ Authentication Succeeded")
-        mapController?.activateEngine()
-    }
-    
-    func authenticationFailed(_ errorCode: Int, desc: String) {
-        print("❌ Authentication Failed: \(errorCode) - \(desc)")
-    }
-    
-    func prepareEngineSucceeded() {
-        print("✅ Engine Prepared Successfully")
-        isEngineReady = true
-    }
-    
-    func prepareEngineFailed(_ errorCode: Int, desc: String) {
-        print("❌ Engine Prepare Failed: \(errorCode) - \(desc)")
-        
-        // 준비 실패시 다시 시도
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.retryPrepareEngine()
-        }
-    }
-    
-    func engineActivated() {
-        print("✅ Engine Activated")
-        if !isViewAdded {
-            // 엔진이 활성화된 후 약간의 지연을 두고 뷰 추가
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                self.addViews()
-            }
-        }
-    }
-    
-    func engineDeactivated() {
-        print("⚠️ Engine Deactivated")
-    }
-    
-    func addViewFailed(_ errorCode: Int, desc: String) {
-        print("❌ Add Views Failed: \(errorCode) - \(desc)")
-        
-        // 뷰 추가 실패시 다시 시도
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.addViews()
-        }
-    }
-    
-    func containerDidResized(_ size: CGSize) {
-        print("📐 Container Resized: \(size)")
-        
-        // 크기가 변경되었을 때 엔진이 준비되지 않았다면 다시 준비
-        if !isEngineReady && size.width > 0 && size.height > 0 {
-            setupMapController()
-        }
-    }
-    
-    private func retryPrepareEngine() {
-        print("🔄 Retrying prepare engine...")
-        if mapViewContainer.frame.width > 0 && mapViewContainer.frame.height > 0 {
-            mapController?.prepareEngine()
-        }
-    }
-    
-    private func setupInitialCamera() {
+    private func setupInitialCamera(_ viewName: String) {
         guard let mapController = self.mapController,
               let lat = self.initialLat,
               let lon = self.initialLon else {
-            print("❌ Missing mapController or coordinates")
+            print("초기값 없음")
             return
         }
         
-        guard let mapView = mapController.getView("map") as? KakaoMap else {
+        guard let mapView = mapController.getView(viewName) as? KakaoMap else {
             print("❌ Failed to get mapview")
             // 맵뷰를 가져오지 못했다면 잠시 후 다시 시도
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.setupInitialCamera()
+                self.setupInitialCamera(viewName)
             }
             return
         }
-        
-        print("📍 Setting up camera for coordinates: \(lat), \(lon)")
         
         let targetPoint = MapPoint(longitude: lon, latitude: lat)
         let cameraUpdate = CameraUpdate.make(target: targetPoint, zoomLevel: 15, mapView: mapView)
         
         mapView.moveCamera(cameraUpdate)
-        print("✅ Camera moved to: \(lat), \(lon)")
     }
 }
 
 extension KakaoFlutterMapView: MapControllerDelegate {
+    func authenticationSucceeded() {
+        mapController?.activateEngine()
+    }
+    
     func addViews() {
-        guard let mapController = self.mapController else {
-            print("❌ MapController is nil")
-            return
-        }
-        
-        print("🗺️ Adding map view...")
+        guard let mapController = self.mapController else { return }
         
         let defaultPosition = MapPoint(
             longitude: self.initialLon ?? 126.986,
             latitude: self.initialLat ?? 37.566
         )
-        
-        // appName을 번들 식별자나 간단한 이름으로 변경
-        let appName = Bundle.main.bundleIdentifier ?? "MapApp"
-        print("📱 Using app name: \(appName)")
         
         let mapviewInfo = MapviewInfo(
             viewName: "map",
@@ -196,36 +125,10 @@ extension KakaoFlutterMapView: MapControllerDelegate {
             defaultPosition: defaultPosition
         )
         
-        // 뷰 추가 전 상태 확인
-        print("🔍 Container frame: \(mapViewContainer.frame)")
-//        print("🔍 Default position: lat=\(defaultPosition.latitude), lon=\(defaultPosition.longitude)")
-        
         mapController.addView(mapviewInfo)
     }
     
     func addViewSucceeded(_ viewName: String, viewInfoName: String) {
-        guard let mapController = self.mapController,
-              let lat = self.initialLat,
-              let lon = self.initialLon else {
-            print("❌ Missing mapController or coordinates")
-            return
-        }
-        
-        guard let mapView = mapController.getView("map") as? KakaoMap else {
-            print("❌ Failed to get mapview")
-            // 맵뷰를 가져오지 못했다면 잠시 후 다시 시도
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.setupInitialCamera()
-            }
-            return
-        }
-        
-        print("📍 Setting up camera for coordinates: \(lat), \(lon)")
-        
-        let targetPoint = MapPoint(longitude: lon, latitude: lat)
-        let cameraUpdate = CameraUpdate.make(target: targetPoint, zoomLevel: 15, mapView: mapView)
-        
-        mapView.moveCamera(cameraUpdate)
-        print("✅ Camera moved to: \(lat), \(lon)")
+        setupInitialCamera(viewName)
     }
 }
