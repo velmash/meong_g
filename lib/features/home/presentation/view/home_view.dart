@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'dart:io' show Platform;
 
-import 'package:meong_g/presentations/home/kakao_map_view.dart';
+import 'package:meong_g/features/home/presentation/view/kakao_map_widget.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomeView extends StatelessWidget {
+  const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
     if (Platform.isIOS) {
-      return const Scaffold(body: IOSKakaoMapView());
+      return const Scaffold(body: KakaoMapWidget());
     } else {
       return Scaffold(body: Center(child: Text("Not Supported OS")));
     }

@@ -1,6 +1,6 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:meong_g/domain/entities/location_entity.dart';
-import 'package:meong_g/domain/repositories/location_repository.dart';
+import 'package:meong_g/features/home/domain/entity/location_entity.dart';
+import 'package:meong_g/features/home/domain/repository/location_repository.dart';
 
 class LocationRepositoryImpl implements LocationRepository {
   @override

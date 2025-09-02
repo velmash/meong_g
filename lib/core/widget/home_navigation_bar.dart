@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:meong_g/App/app_styles.dart';
-import 'package:meong_g/presentations/history/history_screen.dart';
-import 'package:meong_g/presentations/home/home_screen.dart';
-import 'package:meong_g/presentations/my_page/my_page_screen.dart';
+import 'package:meong_g/core/theme/app_styles.dart';
+import 'package:meong_g/features/history/presentation/view/history_view.dart';
+import 'package:meong_g/features/home/presentation/view/home_view.dart';
+import 'package:meong_g/features/my_page/presentation/view/my_page_view.dart';
 
 class HomeNavigationBar extends StatefulWidget {
   const HomeNavigationBar({super.key});
@@ -58,9 +58,9 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
         ),
       ),
       body: <Widget>[
-        const HistoryScreen(),
-        const HomeScreen(),
-        const MyPageScreen(),
+        const HistoryView(),
+        const HomeView(),
+        const MyPageView(),
       ][currentPageIndex],
     );
   }
