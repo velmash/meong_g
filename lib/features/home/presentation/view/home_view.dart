@@ -12,6 +12,7 @@ class HomeView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final homeState = ref.watch(homeViewModelProvider);
+    final viewModel = ref.read(homeViewModelProvider.notifier);
 
     return Container(
       color: Colors.white, // 전체 배경을 흰색으로
@@ -24,14 +25,26 @@ class HomeView extends ConsumerWidget {
               height: 240,
               child: Column(
                 children: [
-                  MapTitleBarView(),
+                  MapTitleBarView(
+                    petNames: homeState.petNames,
+                    onAlarmTap: () {
+                      homeState.petNames != null
+                          ? print("Pets: ${homeState.petNames}")
+                          : viewModel.fetchPets();
+                      print("Alarm Clicked");
+                    },
+                  ),
                   SizedBox(
                     height: 176,
                     width: double.infinity,
                     // color: Colors.blue,
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(20, 4, 20, 20),
-                      child: PetAddCardView(),
+                      child: PetAddCardView(
+                        onProfileTap: () {
+                          print("Profile Complete Clicked");
+                        },
+                      ),
                     ),
                   ),
                 ],
@@ -45,13 +58,18 @@ class HomeView extends ConsumerWidget {
   }
 }
 
-class MapTitleBarView extends ConsumerWidget {
-  const MapTitleBarView({super.key});
+class MapTitleBarView extends StatelessWidget {
+  final List<String>? petNames;
+  final VoidCallback onAlarmTap;
+
+  const MapTitleBarView({
+    super.key,
+    required this.petNames,
+    required this.onAlarmTap,
+  });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final homeState = ref.watch(homeViewModelProvider);
-
+  Widget build(BuildContext context) {
     return SizedBox(
       height: 64,
       width: double.infinity,
@@ -62,12 +80,7 @@ class MapTitleBarView extends ConsumerWidget {
             Image.asset('assets/img/ic_icon.png', height: 40),
             Expanded(child: SizedBox()),
             GestureDetector(
-              onTap: () {
-                homeState.petNames != null
-                    ? print("Pets: ${homeState.petNames}")
-                    : ref.read(homeViewModelProvider.notifier).fetchPets();
-                print("Alarm Clicked");
-              },
+              onTap: onAlarmTap,
               child: Image.asset('assets/img/ic_alarm.png', height: 28),
             ),
           ],
@@ -78,7 +91,9 @@ class MapTitleBarView extends ConsumerWidget {
 }
 
 class PetAddCardView extends StatelessWidget {
-  const PetAddCardView({super.key});
+  final VoidCallback onProfileTap;
+
+  const PetAddCardView({super.key, required this.onProfileTap});
 
   @override
   Widget build(BuildContext context) {
@@ -118,9 +133,7 @@ class PetAddCardView extends StatelessWidget {
               ),
               SizedBox(height: 12),
               GestureDetector(
-                onTap: () {
-                  print("Profile Complete Clicked");
-                },
+                onTap: onProfileTap,
                 child: Container(
                   width: double.infinity,
                   height: 40,
