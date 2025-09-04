@@ -10,7 +10,7 @@ class KakaoMapWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final homeState = ref.watch(homeViewModelProvider);
 
-    if (homeState.isLoading) {
+    if (homeState.isMapLoading) {
       return const Scaffold(
         body: Center(
           child: Column(
@@ -68,10 +68,6 @@ class KakaoMapWidget extends ConsumerWidget {
     }
 
     // Initial state or other unhandled cases
-    return const Scaffold(
-      body: Center(
-        child: Text("Waiting for location..."),
-      ),
-    );
+    return const Scaffold(body: Center(child: Text("Waiting for location...")));
   }
 }

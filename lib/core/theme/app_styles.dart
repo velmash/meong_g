@@ -8,5 +8,6 @@ class AppStyles {
   static const String profile = '$_basePath/img_profile.png';
 
   static const Color primary = Color(0xFF5233FB);
+  static const Color primary100 = Color(0xFFE1DFFF);
   static const Color gray500 = Color(0xFF7A797D);
 }
