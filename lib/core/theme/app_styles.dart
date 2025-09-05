@@ -9,5 +9,6 @@ class AppStyles {
 
   static const Color primary = Color(0xFF5233FB);
   static const Color primary100 = Color(0xFFE1DFFF);
+  static const Color primary700 = Color(0xFF2E09D6);
   static const Color gray500 = Color(0xFF7A797D);
 }
