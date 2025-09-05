@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:meong_g/features/home/domain/entity/meong_g.dart';
-import 'package:meong_g/features/home/presentation/view/home_view.dart';
 import 'package:meong_g/features/home/presentation/view/widgets/pet_add_card.dart';
 import 'package:meong_g/features/home/presentation/view/widgets/pet_info_card.dart';
 

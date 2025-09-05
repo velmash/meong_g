@@ -1,8 +1,6 @@
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:meong_g/core/theme/app_styles.dart';
-import 'package:meong_g/features/home/domain/entity/meong_g.dart';
 import 'package:meong_g/features/home/presentation/view/kakao_map_widget.dart';
 import 'package:meong_g/features/home/presentation/view/widgets/pet_carousel_view.dart';
 import 'package:meong_g/features/home/presentation/viewmodel/home_viewmodel.dart';
@@ -13,7 +11,6 @@ class HomeView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final homeState = ref.watch(homeViewModelProvider);
-    final viewModel = ref.read(homeViewModelProvider.notifier);
 
     return Container(
       color: Colors.white, // 전체 배경을 흰색으로
@@ -28,9 +25,6 @@ class HomeView extends ConsumerWidget {
                 children: [
                   MapTitleBarView(
                     onAlarmTap: () {
-                      // homeState.meongGs != null
-                      //     ? print("Pets: ${homeState.meongGs?.first.name}")
-                      //     : viewModel.fetchPets();
                       print("Alarm Clicked");
                     },
                   ),
