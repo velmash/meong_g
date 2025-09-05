@@ -5,7 +5,7 @@ class MeongGRepositoryImpl implements MeongGRepository {
   @override
   Future<List<MeongG>> fetchMeongGs() async {
     // Simulate a network delay
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 1));
 
     // Return a list of MeongG objects
     return [
