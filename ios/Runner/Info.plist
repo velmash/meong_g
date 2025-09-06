@@ -58,5 +58,21 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>kakaokompassauth</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>kakaoe7e182f9fcbcd12f8dd842a99926e5da</string>
+			</array>
+		</dict>
+	</array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>kakaokompass</string>
+		<string>kakaolink</string>
+	</array>
 </dict>
 </plist>

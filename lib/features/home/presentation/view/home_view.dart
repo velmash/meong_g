@@ -11,6 +11,7 @@ class HomeView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final homeState = ref.watch(homeViewModelProvider);
+    final homeViewModel = ref.read(homeViewModelProvider.notifier);
 
     return Container(
       color: Colors.white, // 전체 배경을 흰색으로
@@ -24,8 +25,10 @@ class HomeView extends ConsumerWidget {
               child: Column(
                 children: [
                   MapTitleBarView(
-                    onAlarmTap: () {
+                    onAlarmTap: () async {
                       print("Alarm Clicked");
+                      final String? token = await homeViewModel.getLoginToken();
+                      print("토큰 값: $token");
                     },
                   ),
                   SizedBox(
