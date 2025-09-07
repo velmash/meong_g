@@ -64,7 +64,9 @@ class LoginViewModel extends StateNotifier<LoginState> {
       if (serverToken != null) {
         print("Login에서 서버 accessToken으로 교체: $serverToken");
         HttpClient().setToken(serverToken);
+        print("HttpClient 토큰 확인 (교체 후): ${HttpClient().token}");
       } else {
+        print("서버 accessToken이 null입니다. authResponse: $authResponse");
         throw Exception('서버에서 accessToken을 받지 못했습니다');
       }
       

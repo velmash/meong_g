@@ -24,12 +24,9 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
 
     return Scaffold(
       extendBody: true,
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       bottomNavigationBar: ClipRRect(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
+        borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
         child: NavigationBar(
           onDestinationSelected: (int index) {
             setState(() {
@@ -57,21 +54,13 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
           }).toList(),
         ),
       ),
-      body: <Widget>[
-        const HistoryView(),
-        const HomeView(),
-        const MyPageView(),
-      ][currentPageIndex],
+      body: <Widget>[const HistoryView(), const HomeView(), const MyPageView()][currentPageIndex],
     );
   }
 }
 
 class _NavigationItem extends StatelessWidget {
-  const _NavigationItem({
-    required this.imagePath,
-    required this.label,
-    required this.isSelected,
-  });
+  const _NavigationItem({required this.imagePath, required this.label, required this.isSelected});
 
   final String imagePath;
   final String label;
@@ -82,16 +71,8 @@ class _NavigationItem extends StatelessWidget {
     final color = isSelected ? AppStyles.primary : AppStyles.gray500;
 
     final textStyle = isSelected
-        ? const TextStyle(
-            color: AppStyles.primary,
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-          )
-        : const TextStyle(
-            color: AppStyles.gray500,
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-          );
+        ? const TextStyle(color: AppStyles.primary, fontSize: 14, fontWeight: FontWeight.w700)
+        : const TextStyle(color: AppStyles.gray500, fontSize: 14, fontWeight: FontWeight.w400);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,

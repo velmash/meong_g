@@ -8,19 +8,10 @@ class SplashState {
   final bool isLoading;
   final String? errorMessage;
 
-  SplashState({
-    this.isLoading = true,
-    this.errorMessage,
-  });
+  SplashState({this.isLoading = true, this.errorMessage});
 
-  SplashState copyWith({
-    bool? isLoading,
-    String? errorMessage,
-  }) {
-    return SplashState(
-      isLoading: isLoading ?? this.isLoading,
-      errorMessage: errorMessage ?? this.errorMessage,
-    );
+  SplashState copyWith({bool? isLoading, String? errorMessage}) {
+    return SplashState(isLoading: isLoading ?? this.isLoading, errorMessage: errorMessage ?? this.errorMessage);
   }
 }
 
@@ -35,27 +26,24 @@ class SplashViewModel extends StateNotifier<SplashState> {
 
     try {
       final isLoggedIn = await _kakaoAuthUsecase.isLoggedIn();
-      
+
       if (isLoggedIn) {
         // 1. 카카오 idToken 받기
         final kakaoToken = await _kakaoAuthUsecase.getAccessToken();
         if (kakaoToken != null) {
-          print("Splash에서 카카오 idToken: $kakaoToken");
-          
           // 2. 먼저 HttpClient에 카카오 idToken 설정 (헤더용)
           HttpClient().setToken(kakaoToken);
-          
+
           try {
             // 3. AuthRemoteDataSourceImpl 호출 (헤더에 카카오 토큰 포함하여)
-            final authResponse = await _authRemoteDataSource.authenticateWithKakao(
-              idToken: kakaoToken,
-            );
-            
+            final authResponse = await _authRemoteDataSource.authenticateWithKakao(idToken: kakaoToken);
+
             final data = authResponse['data'] as Map<String, dynamic>?;
             final serverToken = data?['accessToken'] as String?;
             if (serverToken != null) {
-              print("Splash에서 서버 accessToken으로 교체: $serverToken");
               HttpClient().setToken(serverToken);
+            } else {
+              print("서버 accessToken이 null입니다. authResponse: $authResponse");
             }
           } catch (e) {
             print("Splash에서 서버 인증 실패: $e");
@@ -66,14 +54,11 @@ class SplashViewModel extends StateNotifier<SplashState> {
           print("Splash에서 카카오 토큰이 null입니다");
         }
       }
-      
+
       state = state.copyWith(isLoading: false);
       return isLoggedIn;
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, errorMessage: e.toString());
       return false;
     }
   }

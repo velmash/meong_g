@@ -12,15 +12,8 @@ class KakaoAuthRepositoryImpl implements KakaoAuthRepository {
   Future<bool> isLoggedIn() async {
     try {
       await UserApi.instance.accessTokenInfo();
-
-      // 로그인 상태일 때 토큰을 HttpClient에 설정
-      final token = await TokenManagerProvider.instance.manager.getToken();
-      _httpClient.setToken(token?.idToken);
-
       return true;
     } catch (e) {
-      // 로그인 안된 상태일 때 토큰 제거
-      _httpClient.clearToken();
       return false;
     }
   }

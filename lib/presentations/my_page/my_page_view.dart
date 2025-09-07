@@ -17,11 +17,6 @@ class _MyPageViewState extends ConsumerState<MyPageView> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(myPageViewModelProvider.notifier).checkLoginStatus();
     });
-
-    final viewModel = ref.read(myPageViewModelProvider.notifier);
-
-    final userInfo = viewModel.getUserInfo();
-    print("HIHIH $userInfo");
   }
 
   @override
@@ -42,7 +37,7 @@ class _MyPageViewState extends ConsumerState<MyPageView> {
 
           if (state.isLoading)
             CircularProgressIndicator()
-          else if (state.isLoggedIn && state.user != null) ...[
+          else if (state.isLoggedIn && state.userInfo != null) ...[
             Container(
               padding: EdgeInsets.all(16),
               margin: EdgeInsets.all(16),
@@ -52,15 +47,24 @@ class _MyPageViewState extends ConsumerState<MyPageView> {
               ),
               child: Column(
                 children: [
-                  if (state.user!.profileImageUrl != null)
-                    CircleAvatar(radius: 30, backgroundImage: NetworkImage(state.user!.profileImageUrl!)),
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundImage: (state.userInfo!.profileImageFileName != null && 
+                                    state.userInfo!.profileImageFileName!.isNotEmpty &&
+                                    state.userInfo!.profileImageFileName!.startsWith('http'))
+                        ? NetworkImage(state.userInfo!.profileImageFileName!)
+                        : null,
+                    child: (state.userInfo!.profileImageFileName == null || 
+                           state.userInfo!.profileImageFileName!.isEmpty ||
+                           !state.userInfo!.profileImageFileName!.startsWith('http'))
+                        ? Icon(Icons.person, size: 30, color: Colors.white)
+                        : null,
+                  ),
                   SizedBox(height: 8),
                   Text(
-                    state.user!.nickname ?? "사용자",
+                    state.userInfo!.nickname ?? "사용자",
                     style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
                   ),
-                  if (state.user!.email != null)
-                    Text(state.user!.email!, style: TextStyle(color: Colors.white70, fontSize: 14)),
                 ],
               ),
             ),

@@ -12,20 +12,12 @@ class HistoryView extends StatelessWidget {
           Text(
             "임요환 징얼충\n남성호소인",
             textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 30,
-              fontWeight: FontWeight.w700,
-            ),
+            style: TextStyle(color: Colors.black, fontSize: 30, fontWeight: FontWeight.w700),
           ),
           SizedBox(height: 16),
           Text(
             "기록",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 30,
-              fontWeight: FontWeight.w700,
-            ),
+            style: TextStyle(color: Colors.black, fontSize: 30, fontWeight: FontWeight.w700),
           ),
         ],
       ),
