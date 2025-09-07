@@ -17,6 +17,11 @@ class _MyPageViewState extends ConsumerState<MyPageView> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(myPageViewModelProvider.notifier).checkLoginStatus();
     });
+
+    final viewModel = ref.read(myPageViewModelProvider.notifier);
+
+    final userInfo = viewModel.getUserInfo();
+    print("HIHIH $userInfo");
   }
 
   @override
@@ -30,11 +35,7 @@ class _MyPageViewState extends ConsumerState<MyPageView> {
         children: [
           Text(
             "마이페이지",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 30,
-              fontWeight: FontWeight.w700,
-            ),
+            style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.w700),
           ),
 
           SizedBox(height: 16),
@@ -52,26 +53,14 @@ class _MyPageViewState extends ConsumerState<MyPageView> {
               child: Column(
                 children: [
                   if (state.user!.profileImageUrl != null)
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundImage: NetworkImage(
-                        state.user!.profileImageUrl!,
-                      ),
-                    ),
+                    CircleAvatar(radius: 30, backgroundImage: NetworkImage(state.user!.profileImageUrl!)),
                   SizedBox(height: 8),
                   Text(
                     state.user!.nickname ?? "사용자",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
                   ),
                   if (state.user!.email != null)
-                    Text(
-                      state.user!.email!,
-                      style: TextStyle(color: Colors.white70, fontSize: 14),
-                    ),
+                    Text(state.user!.email!, style: TextStyle(color: Colors.white70, fontSize: 14)),
                 ],
               ),
             ),
@@ -93,18 +82,11 @@ class _MyPageViewState extends ConsumerState<MyPageView> {
               child: Container(
                 width: 120,
                 height: 60,
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(12)),
                 child: Center(
                   child: Text(
                     "로그아웃",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),
@@ -116,18 +98,11 @@ class _MyPageViewState extends ConsumerState<MyPageView> {
               child: Container(
                 width: 120,
                 height: 60,
-                decoration: BoxDecoration(
-                  color: Colors.yellow,
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                decoration: BoxDecoration(color: Colors.yellow, borderRadius: BorderRadius.circular(12)),
                 child: Center(
                   child: Text(
                     "카카오 로그인",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),

@@ -10,9 +10,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final HttpClient _httpClient = HttpClient();
 
   @override
-  Future<Map<String, dynamic>> authenticateWithKakao({
-    required String idToken,
-  }) async {
+  Future<Map<String, dynamic>> authenticateWithKakao({required String idToken}) async {
     try {
       final response = await _httpClient.post(
         ApiConfig.kakaoAuth,
@@ -21,7 +19,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
 
       if (response.statusCode == 200) {
-        print(response.body);
+        print("시발: ${response.body}");
         return jsonDecode(response.body);
       } else {
         throw Exception('Server authentication failed: ${response.statusCode}');
