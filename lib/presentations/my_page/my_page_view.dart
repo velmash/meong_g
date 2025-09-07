@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:meong_g/core/theme/app_styles.dart';
 import 'my_page_viewmodel.dart';
 import '../login/login_view.dart';
 
@@ -24,94 +25,116 @@ class _MyPageViewState extends ConsumerState<MyPageView> {
     final state = ref.watch(myPageViewModelProvider);
     final viewModel = ref.read(myPageViewModelProvider.notifier);
 
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "마이페이지",
-            style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.w700),
-          ),
-
-          SizedBox(height: 16),
-
-          if (state.isLoading)
-            CircularProgressIndicator()
-          else if (state.isLoggedIn && state.userInfo != null) ...[
-            Container(
-              padding: EdgeInsets.all(16),
-              margin: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage: (state.userInfo!.profileImageFileName != null && 
-                                    state.userInfo!.profileImageFileName!.isNotEmpty &&
-                                    state.userInfo!.profileImageFileName!.startsWith('http'))
-                        ? NetworkImage(state.userInfo!.profileImageFileName!)
-                        : null,
-                    child: (state.userInfo!.profileImageFileName == null || 
-                           state.userInfo!.profileImageFileName!.isEmpty ||
-                           !state.userInfo!.profileImageFileName!.startsWith('http'))
-                        ? Icon(Icons.person, size: 30, color: Colors.white)
-                        : null,
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    state.userInfo!.nickname ?? "사용자",
-                    style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                ],
+    return Container(
+      color: AppStyles.gray50,
+      child: SafeArea(
+        child: Column(
+          // mainAxisAlignment:
+          // MainAxisAlignment.center,
+          // crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(18, 20, 0, 0),
+              child: Text(
+                "마이페이지",
+                style: TextStyle(color: AppStyles.gray900, fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
-            GestureDetector(
-              onTap: () async {
-                await viewModel.logout();
-                if (context.mounted) {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) => LoginView(),
-                      transitionDuration: Duration.zero,
-                      reverseTransitionDuration: Duration.zero,
+
+            SizedBox(height: 34),
+
+            if (state.isLoading)
+              CircularProgressIndicator()
+            else if (state.isLoggedIn && state.userInfo != null) ...[
+              Container(
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 12, 0),
+                      child: Container(
+                        height: 72,
+                        width: 72,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(color: AppStyles.gray300, shape: BoxShape.circle),
+                        // child: Text('Main'),
+                      ),
                     ),
-                    (route) => false,
-                  );
-                }
-              },
-              child: Container(
-                width: 120,
-                height: 60,
-                decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(12)),
-                child: Center(
-                  child: Text(
-                    "로그아웃",
-                    style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 4,
+                      children: [
+                        Text(
+                          (state.userInfo!.nickname?.isNotEmpty == true) ? state.userInfo!.nickname! : "사용자를 등록해주세요.",
+                          style: TextStyle(color: AppStyles.gray900, fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+
+                        Text(
+                          (state.userInfo!.introduction?.isNotEmpty == true) ? state.userInfo!.introduction! : "소개 문구",
+                          style: TextStyle(color: AppStyles.gray500, fontSize: 16, fontWeight: FontWeight.w400),
+                        ),
+                      ],
+                    ),
+
+                    Spacer(),
+
+                    Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: GestureDetector(
+                        child: Image.asset('assets/img/ic_pencil.png', width: 24, height: 24, color: AppStyles.gray500),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Spacer(),
+
+              GestureDetector(
+                onTap: () async {
+                  await viewModel.logout();
+                  if (context.mounted) {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) => LoginView(),
+                        transitionDuration: Duration.zero,
+                        reverseTransitionDuration: Duration.zero,
+                      ),
+                      (route) => false,
+                    );
+                  }
+                },
+                child: Container(
+                  width: 120,
+                  height: 60,
+                  decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(12)),
+                  child: Center(
+                    child: Text(
+                      "로그아웃",
+                      style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ] else
-            GestureDetector(
-              // onTap: () => viewModel.login(),
-              onTap: () => print("HI"),
-              child: Container(
-                width: 120,
-                height: 60,
-                decoration: BoxDecoration(color: Colors.yellow, borderRadius: BorderRadius.circular(12)),
-                child: Center(
-                  child: Text(
-                    "카카오 로그인",
-                    style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600),
+            ] else
+              GestureDetector(
+                // onTap: () => viewModel.login(),
+                onTap: () => print("HI"),
+                child: Container(
+                  width: 120,
+                  height: 60,
+                  decoration: BoxDecoration(color: Colors.yellow, borderRadius: BorderRadius.circular(12)),
+                  child: Center(
+                    child: Text(
+                      "카카오 로그인",
+                      style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
                   ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

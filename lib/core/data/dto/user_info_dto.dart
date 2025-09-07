@@ -24,9 +24,9 @@ class UserInfoDto {
   UserInfo? toUserInfo() {
     if (data == null) return null;
     return UserInfo(
-      nickname: data!.nickname ?? '',
-      introduction: data!.introduction ?? '',
-      profileImageFileName: data!.profileImageFileName ?? '',
+      nickname: data!.nickname,
+      introduction: data!.introduction,
+      profileImageFileName: data!.profileImageFileName,
       authType: data!.authType ?? '',
     );
   }

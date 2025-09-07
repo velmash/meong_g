@@ -14,6 +14,7 @@ class AppStyles {
   static const Color gray900 = Color(0xFF1F1E21);
   static const Color gray500 = Color(0xFF7A797D);
   static const Color gray400 = Color(0xFF939397);
+  static const Color gray300 = Color(0xFFABABAF);
   static const Color gray50 = Color(0xFFEFEFF4);
 
   static const Color kakaoColor = Color(0xFFFFE812);

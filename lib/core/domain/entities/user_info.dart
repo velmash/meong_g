@@ -1,8 +1,8 @@
 class UserInfo {
-  final String nickname;
-  final String introduction;
-  final String profileImageFileName;
-  final String authType;
+  final String? nickname;
+  final String? introduction;
+  final String? profileImageFileName;
+  final String? authType;
 
   UserInfo({
     required this.nickname,
@@ -13,10 +13,10 @@ class UserInfo {
 
   factory UserInfo.fromJson(Map<String, dynamic> json) {
     return UserInfo(
-      nickname: json['nickname'] as String,
-      introduction: json['introduction'] as String,
-      profileImageFileName: json['profileImageFileName'] as String,
-      authType: json['authType'] as String,
+      nickname: json['nickname'] as String?,
+      introduction: json['introduction'] as String?,
+      profileImageFileName: json['profileImageFileName'] as String?,
+      authType: json['authType'] as String?,
     );
   }
 }
