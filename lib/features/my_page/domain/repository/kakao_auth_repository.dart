@@ -1,8 +1,0 @@
-import '../entity/kakao_user.dart';
-
-abstract class KakaoAuthRepository {
-  Future<bool> isLoggedIn();
-  Future<void> logout();
-  Future<KakaoUser?> getCurrentUser();
-  Future<String?> getAccessToken();
-}
