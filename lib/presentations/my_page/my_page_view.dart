@@ -30,9 +30,7 @@ class _MyPageViewState extends ConsumerState<MyPageView> {
       color: AppStyles.gray50,
       child: SafeArea(
         child: Column(
-          // mainAxisAlignment:
-          // MainAxisAlignment.center,
-          // crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(18, 20, 0, 0),
