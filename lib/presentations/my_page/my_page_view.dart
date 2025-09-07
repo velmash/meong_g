@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meong_g/core/theme/app_styles.dart';
+import 'package:meong_g/core/theme/m_toast.dart';
 import 'my_page_viewmodel.dart';
 import '../login/login_view.dart';
 
@@ -81,6 +82,9 @@ class _MyPageViewState extends ConsumerState<MyPageView> {
                     Padding(
                       padding: const EdgeInsets.only(right: 20),
                       child: GestureDetector(
+                        onTap: () {
+                          Mtoast.show(context, "구현..");
+                        },
                         child: Image.asset('assets/img/ic_pencil.png', width: 24, height: 24, color: AppStyles.gray500),
                       ),
                     ),
