@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../viewmodel/my_page_viewmodel.dart';
+import 'package:meong_g/features/login/login_view.dart';
 
 class MyPageView extends ConsumerStatefulWidget {
   const MyPageView({super.key});
@@ -29,7 +30,11 @@ class _MyPageViewState extends ConsumerState<MyPageView> {
         children: [
           Text(
             "마이페이지",
-            style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.w700),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 30,
+              fontWeight: FontWeight.w700,
+            ),
           ),
 
           SizedBox(height: 16),
@@ -49,12 +54,18 @@ class _MyPageViewState extends ConsumerState<MyPageView> {
                   if (state.user!.profileImageUrl != null)
                     CircleAvatar(
                       radius: 30,
-                      backgroundImage: NetworkImage(state.user!.profileImageUrl!),
+                      backgroundImage: NetworkImage(
+                        state.user!.profileImageUrl!,
+                      ),
                     ),
                   SizedBox(height: 8),
                   Text(
                     state.user!.nickname ?? "사용자",
-                    style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   if (state.user!.email != null)
                     Text(
@@ -65,30 +76,58 @@ class _MyPageViewState extends ConsumerState<MyPageView> {
               ),
             ),
             GestureDetector(
-              onTap: () => viewModel.logout(),
+              onTap: () async {
+                await viewModel.logout();
+                if (context.mounted) {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) => LoginView(),
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                    (route) => false,
+                  );
+                }
+              },
               child: Container(
                 width: 120,
                 height: 60,
-                decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(12)),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 child: Center(
                   child: Text(
                     "로그아웃",
-                    style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),
             ),
           ] else
             GestureDetector(
-              onTap: () => viewModel.login(),
+              // onTap: () => viewModel.login(),
+              onTap: () => print("HI"),
               child: Container(
                 width: 120,
                 height: 60,
-                decoration: BoxDecoration(color: Colors.yellow, borderRadius: BorderRadius.circular(12)),
+                decoration: BoxDecoration(
+                  color: Colors.yellow,
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 child: Center(
                   child: Text(
                     "카카오 로그인",
-                    style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),

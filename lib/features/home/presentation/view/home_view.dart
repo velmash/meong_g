@@ -11,7 +11,7 @@ class HomeView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final homeState = ref.watch(homeViewModelProvider);
-    final homeViewModel = ref.read(homeViewModelProvider.notifier);
+    // final homeViewModel = ref.read(homeViewModelProvider.notifier);
 
     return Container(
       color: Colors.white, // 전체 배경을 흰색으로
@@ -27,8 +27,8 @@ class HomeView extends ConsumerWidget {
                   MapTitleBarView(
                     onAlarmTap: () async {
                       print("Alarm Clicked");
-                      final String? token = await homeViewModel.getLoginToken();
-                      print("토큰 값: $token");
+                      // final String? token = await homeViewModel.getLoginToken();
+                      // print("토큰 값: $token");
                     },
                   ),
                   SizedBox(
@@ -67,7 +67,10 @@ class MapTitleBarView extends StatelessWidget {
           children: [
             Image.asset('assets/img/ic_icon.png', height: 40),
             Expanded(child: SizedBox()),
-            GestureDetector(onTap: onAlarmTap, child: Image.asset('assets/img/ic_alarm.png', height: 28)),
+            GestureDetector(
+              onTap: onAlarmTap,
+              child: Image.asset('assets/img/ic_alarm.png', height: 28),
+            ),
           ],
         ),
       ),
@@ -80,6 +83,8 @@ class MapView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Platform.isIOS ? KakaoMapWidget() : Center(child: Text("Not Supported OS"));
+    return Platform.isIOS
+        ? KakaoMapWidget()
+        : Center(child: Text("Not Supported OS"));
   }
 }

@@ -28,7 +28,7 @@ class MyPageState {
 }
 
 class MyPageViewModel extends StateNotifier<MyPageState> {
-  final KakaoLoginUsecase _kakaoLoginUsecase = KakaoLoginUsecase(KakaoAuthRepositoryImpl());
+  final KakaoUserUsecase _kakaoUserUsecase = KakaoUserUsecase(KakaoAuthRepositoryImpl());
 
   MyPageViewModel() : super(MyPageState());
 
@@ -36,9 +36,9 @@ class MyPageViewModel extends StateNotifier<MyPageState> {
     state = state.copyWith(isLoading: true);
     
     try {
-      final isLoggedIn = await _kakaoLoginUsecase.isLoggedIn();
+      final isLoggedIn = await _kakaoUserUsecase.isLoggedIn();
       if (isLoggedIn) {
-        final user = await _kakaoLoginUsecase.getCurrentUser();
+        final user = await _kakaoUserUsecase.getCurrentUser();
         state = state.copyWith(
           isLoggedIn: true,
           user: user,
@@ -60,27 +60,11 @@ class MyPageViewModel extends StateNotifier<MyPageState> {
     }
   }
 
-  Future<void> login() async {
-    state = state.copyWith(isLoading: true);
-    
-    try {
-      final user = await _kakaoLoginUsecase.login();
-      state = state.copyWith(
-        isLoggedIn: true,
-        user: user,
-        isLoading: false,
-      );
-    } catch (e) {
-      print('로그인 실패: $e');
-      state = state.copyWith(isLoading: false);
-    }
-  }
-
   Future<void> logout() async {
     state = state.copyWith(isLoading: true);
     
     try {
-      await _kakaoLoginUsecase.logout();
+      await _kakaoUserUsecase.logout();
       state = state.copyWith(
         isLoggedIn: false,
         user: null,
@@ -93,7 +77,7 @@ class MyPageViewModel extends StateNotifier<MyPageState> {
   }
 
   Future<String?> getAccessToken() async {
-    return await _kakaoLoginUsecase.getAccessToken();
+    return await _kakaoUserUsecase.getAccessToken();
   }
 }
 

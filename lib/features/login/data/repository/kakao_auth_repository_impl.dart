@@ -13,6 +13,26 @@ class KakaoAuthRepositoryImpl implements KakaoAuthRepository {
     }
   }
 
+  @override
+  Future<KakaoUser> login() async {
+    try {
+      if (await isKakaoTalkInstalled()) {
+        await UserApi.instance.loginWithKakaoTalk();
+      } else {
+        await UserApi.instance.loginWithKakaoAccount();
+      }
+      
+      final user = await UserApi.instance.me();
+      return KakaoUser(
+        id: user.id.toString(),
+        nickname: user.kakaoAccount?.profile?.nickname,
+        profileImageUrl: user.kakaoAccount?.profile?.profileImageUrl,
+        email: user.kakaoAccount?.email,
+      );
+    } catch (e) {
+      throw Exception('카카오 로그인 실패: $e');
+    }
+  }
 
   @override
   Future<void> logout() async {

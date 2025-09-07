@@ -7,8 +7,6 @@ import 'package:meong_g/features/home/domain/entity/location_entity.dart';
 import 'package:meong_g/features/home/domain/entity/meong_g.dart';
 import 'package:meong_g/features/home/domain/usecase/location_usecase.dart';
 import 'package:meong_g/features/home/domain/usecase/meong_g_usecase.dart';
-import 'package:meong_g/features/my_page/data/repository/kakao_auth_repository_impl.dart';
-import 'package:meong_g/features/my_page/domain/usecase/kakao_login_usecase.dart'; // 변경된 UseCase 임포트
 
 // 1. State Class Definition
 class HomeState {
@@ -17,9 +15,19 @@ class HomeState {
   final String? errorMessage;
   final List<MeongG>? meongGs;
 
-  HomeState({this.isMapLoading = false, this.location, this.errorMessage, this.meongGs});
+  HomeState({
+    this.isMapLoading = false,
+    this.location,
+    this.errorMessage,
+    this.meongGs,
+  });
 
-  HomeState copyWith({bool? isLoading, LocationEntity? location, String? errorMessage, List<MeongG>? meongGs}) {
+  HomeState copyWith({
+    bool? isLoading,
+    LocationEntity? location,
+    String? errorMessage,
+    List<MeongG>? meongGs,
+  }) {
     return HomeState(
       isMapLoading: isLoading ?? isMapLoading,
       location: location ?? this.location,
@@ -34,7 +42,6 @@ class HomeViewModel extends StateNotifier<HomeState> {
   // ViewModel이 UseCase와 Repository의 구현체까지 직접 생성하고 소유
   final LocationUseCase _useCase = LocationUseCase(LocationRepositoryImpl());
   final MeongGUseCase _meongGUseCase = MeongGUseCase(MeongGRepositoryImpl());
-  final KakaoLoginUsecase _kakaoLoginUsecase = KakaoLoginUsecase(KakaoAuthRepositoryImpl());
 
   HomeViewModel() : super(HomeState()) {
     fetchCurrentLocation();
@@ -65,16 +72,14 @@ class HomeViewModel extends StateNotifier<HomeState> {
     }
   }
 
-  Future<String?> getLoginToken() async {
-    return _kakaoLoginUsecase.getAccessToken();
-  }
-
   Future<void> refreshLocation() async {
     await fetchCurrentLocation();
   }
 }
 
 // 3. StateNotifierProvider Definition
-final homeViewModelProvider = StateNotifierProvider<HomeViewModel, HomeState>((ref) {
+final homeViewModelProvider = StateNotifierProvider<HomeViewModel, HomeState>((
+  ref,
+) {
   return HomeViewModel();
 });
