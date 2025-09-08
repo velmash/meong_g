@@ -8,16 +8,32 @@ import '../../core/network/http_client.dart';
 
 class MyPageState {
   final bool isLoggedIn;
-  final UserInfo? userInfo;
   final bool isLoading;
+  final String errorMessage;
+  final int petCount;
+  final UserInfo? userInfo;
 
-  MyPageState({this.isLoggedIn = false, this.userInfo, this.isLoading = false});
+  const MyPageState({
+    this.isLoggedIn = false,
+    this.isLoading = false,
+    this.errorMessage = '',
+    this.petCount = 2,
+    this.userInfo,
+  });
 
-  MyPageState copyWith({bool? isLoggedIn, UserInfo? userInfo, bool? isLoading}) {
+  MyPageState copyWith({
+    bool? isLoggedIn,
+    bool? isLoading,
+    String? errorMessage,
+    int? petCount,
+    UserInfo? userInfo,
+  }) {
     return MyPageState(
       isLoggedIn: isLoggedIn ?? this.isLoggedIn,
-      userInfo: userInfo ?? this.userInfo,
       isLoading: isLoading ?? this.isLoading,
+      errorMessage: errorMessage ?? this.errorMessage,
+      petCount: petCount ?? this.petCount,
+      userInfo: userInfo ?? this.userInfo,
     );
   }
 }
@@ -29,40 +45,69 @@ class MyPageViewModel extends StateNotifier<MyPageState> {
   MyPageViewModel() : super(MyPageState());
 
   Future<void> checkLoginStatus() async {
-    state = state.copyWith(isLoading: true);
+    state = state.copyWith(isLoading: true, errorMessage: '');
 
     try {
       final isLoggedIn = await _kakaoAuthUsecase.isLoggedIn();
       if (isLoggedIn) {
         final userInfo = await _userUsecase.getUserInfo();
-        state = state.copyWith(isLoggedIn: true, userInfo: userInfo, isLoading: false);
+        state = state.copyWith(
+          isLoggedIn: true,
+          userInfo: userInfo,
+          isLoading: false,
+        );
       } else {
-        state = state.copyWith(isLoggedIn: false, userInfo: null, isLoading: false);
+        state = state.copyWith(
+          isLoggedIn: false,
+          userInfo: null,
+          isLoading: false,
+        );
       }
     } catch (e) {
-      print("MyPage getUserInfo 에러: $e");
-      state = state.copyWith(isLoggedIn: false, userInfo: null, isLoading: false);
+      state = state.copyWith(
+        isLoggedIn: false,
+        userInfo: null,
+        isLoading: false,
+        errorMessage: 'getUserInfo 에러: $e',
+      );
     }
   }
 
   Future<void> logout() async {
-    state = state.copyWith(isLoading: true);
+    state = state.copyWith(isLoading: true, errorMessage: '');
 
     try {
       await _kakaoAuthUsecase.logout();
-
-      // 로그아웃 후 HttpClient에서 토큰 제거
       HttpClient().clearToken();
-
-      state = state.copyWith(isLoggedIn: false, userInfo: null, isLoading: false);
+      
+      state = state.copyWith(
+        isLoggedIn: false,
+        userInfo: null,
+        isLoading: false,
+      );
     } catch (e) {
-      print('로그아웃 실패: $e');
-      state = state.copyWith(isLoading: false);
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: '로그아웃 실패: $e',
+      );
     }
   }
 
-  Future<UserInfo> getUserInfo() async {
-    return await _userUsecase.getUserInfo();
+  Future<void> getUserInfo() async {
+    state = state.copyWith(isLoading: true, errorMessage: '');
+
+    try {
+      final userInfo = await _userUsecase.getUserInfo();
+      state = state.copyWith(
+        userInfo: userInfo,
+        isLoading: false,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: 'getUserInfo 에러: $e',
+      );
+    }
   }
 }
 
