@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:meong_g/core/widget/home_navigation_bar.dart';
+import 'package:meong_g/presentations/alarm/alarm_view.dart';
 import 'package:meong_g/presentations/login/login_view.dart';
+import 'package:meong_g/presentations/pet_register/pet_register_view.dart';
 import 'package:meong_g/presentations/splash/splash_view.dart';
+import 'package:meong_g/presentations/user_register/user_register_view.dart';
 
 void main() {
   // 카카오 SDK 초기화 - 실제 네이티브 앱 키를 여기에 입력해야 합니다
@@ -20,6 +23,9 @@ void main() {
         routes: {
           '/home': (context) => HomeNavigationBar(),
           '/login': (context) => LoginView(),
+          '/alarm': (context) => AlarmView(),
+          '/user-register': (context) => UserRegisterView(),
+          '/pet-register': (context) => PetRegisterView(),
         },
       ),
     ),

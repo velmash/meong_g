@@ -25,11 +25,7 @@ class HomeView extends ConsumerWidget {
               child: Column(
                 children: [
                   MapTitleBarView(
-                    onAlarmTap: () async {
-                      print("Alarm Clicked");
-                      // final String? token = await homeViewModel.getLoginToken();
-                      // print("토큰 값: $token");
-                    },
+                    onAlarmTap: () => Navigator.of(context).pushNamed('/alarm'),
                   ),
                   SizedBox(
                     height: 176,
