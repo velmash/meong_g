@@ -92,6 +92,14 @@ class _MyPageViewState extends ConsumerState<MyPageView> {
 
               Spacer(),
 
+              Container(
+                child: Column(
+                  children: [
+                    Row(children: [Text("나의 반려견"), Spacer(), Text("반려견 추가하기")]),
+                  ],
+                ),
+              ),
+
               GestureDetector(
                 onTap: () async {
                   await viewModel.logout();
