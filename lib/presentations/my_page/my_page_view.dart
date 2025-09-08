@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meong_g/core/theme/app_styles.dart';
-import 'package:meong_g/core/theme/m_toast.dart';
 import 'my_page_viewmodel.dart';
 import 'widgets/my_page_header_view.dart';
 import 'widgets/user_profile_card_view.dart';
