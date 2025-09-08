@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:meong_g/core/theme/app_styles.dart';
-import 'package:meong_g/core/theme/m_toast.dart';
 
 class UserProfileCardView extends StatelessWidget {
   final String? nickname;
   final String? introduction;
-  final VoidCallback? onEditTap;
+  final VoidCallback onEditTap;
 
   const UserProfileCardView({
     super.key,
     this.nickname,
     this.introduction,
-    this.onEditTap,
+    required this.onEditTap,
   });
 
   @override
@@ -56,7 +55,7 @@ class UserProfileCardView extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(right: 20),
           child: GestureDetector(
-            onTap: onEditTap ?? () => Mtoast.show(context, "구현.."),
+            onTap: onEditTap,
             child: Image.asset(
               'assets/img/ic_pencil.png',
               width: 24,
