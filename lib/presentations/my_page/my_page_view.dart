@@ -45,16 +45,14 @@ class _MyPageViewState extends ConsumerState<MyPageView> {
               UserProfileCardView(
                 nickname: state.userInfo?.nickname,
                 introduction: state.userInfo?.introduction,
-                onEditTap: () =>
-                    Navigator.of(context).pushNamed('/user-register'),
+                onEditTap: () => Navigator.of(context).pushNamed('/user-register'),
               ),
 
             const SizedBox(height: 28),
 
             PetSectionView(
               petCount: state.petCount,
-              onAddPetTap: () =>
-                  Navigator.of(context).pushNamed('/pet-register'),
+              onAddPetTap: () => Navigator.of(context).pushNamed('/pet-register'),
             ),
 
             const SizedBox(height: 20),

@@ -3,6 +3,15 @@ import 'package:meong_g/core/theme/m_toast.dart';
 import '../../login/login_view.dart';
 import 'my_list_card_view.dart';
 
+enum MenuItemType {
+  notification('서비스 알림 설정'),
+  logout('로그아웃'),
+  withdraw('탈퇴하기');
+
+  const MenuItemType(this.title);
+  final String title;
+}
+
 class MenuSectionView extends StatelessWidget {
   final dynamic viewModel;
 
@@ -21,11 +30,11 @@ class MenuSectionView extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
           child: Column(
             children: [
-              ...menuItems.map(
+              ...MenuItemType.values.map(
                 (item) => MyListCardView(
-                  title: item['title'],
-                  type: item['type'],
-                  onTap: () => _handleMenuTap(context, item['type'], viewModel),
+                  title: item.title,
+                  type: item.name,
+                  onTap: () => _handleMenuTap(context, item, viewModel),
                 ),
               ),
             ],
@@ -36,24 +45,16 @@ class MenuSectionView extends StatelessWidget {
   }
 }
 
-// 메뉴 데이터
-final List<Map<String, dynamic>> menuItems = [
-  {'title': '서비스 알림 설정', 'type': 'notification'},
-  {'title': '로그아웃', 'type': 'logout'},
-  {'title': '탈퇴하기', 'type': 'withdraw'},
-];
-
-// 메뉴 탭 처리
 void _handleMenuTap(
   BuildContext context,
-  String type,
+  MenuItemType type,
   dynamic viewModel,
 ) async {
   switch (type) {
-    case 'notification':
+    case MenuItemType.notification:
       Mtoast.show(context, "서비스 알림 설정");
       break;
-    case 'logout':
+    case MenuItemType.logout:
       await viewModel.logout();
       if (context.mounted) {
         Navigator.pushAndRemoveUntil(
@@ -68,7 +69,7 @@ void _handleMenuTap(
         );
       }
       break;
-    case 'withdraw':
+    case MenuItemType.withdraw:
       Mtoast.show(context, "탈퇴하기");
       break;
   }
