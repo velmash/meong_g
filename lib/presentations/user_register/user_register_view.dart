@@ -25,8 +25,12 @@ class _UserRegisterViewState extends ConsumerState<UserRegisterView> {
   @override
   void initState() {
     super.initState();
-    nameController = TextEditingController(text: widget.userInfo?.nickname ?? '');
-    introductionController = TextEditingController(text: widget.userInfo?.introduction ?? '');
+    nameController = TextEditingController(
+      text: widget.userInfo?.nickname ?? '',
+    );
+    introductionController = TextEditingController(
+      text: widget.userInfo?.introduction ?? '',
+    );
   }
 
   @override
@@ -39,11 +43,17 @@ class _UserRegisterViewState extends ConsumerState<UserRegisterView> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(userRegisterViewModelProvider(widget.userInfo));
-    final viewModel = ref.read(userRegisterViewModelProvider(widget.userInfo).notifier);
+    final viewModel = ref.read(
+      userRegisterViewModelProvider(widget.userInfo).notifier,
+    );
 
     // 에러 메시지가 있을 때 스낵바 표시
-    ref.listen(userRegisterViewModelProvider(widget.userInfo), (previous, next) {
-      if (next.errorMessage.isNotEmpty && previous?.errorMessage != next.errorMessage) {
+    ref.listen(userRegisterViewModelProvider(widget.userInfo), (
+      previous,
+      next,
+    ) {
+      if (next.errorMessage.isNotEmpty &&
+          previous?.errorMessage != next.errorMessage) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(next.errorMessage),
@@ -65,7 +75,9 @@ class _UserRegisterViewState extends ConsumerState<UserRegisterView> {
         isValid: state.isValid,
         onComplete: () async {
           await viewModel.saveUserProfile();
-          if (context.mounted && !state.isLoading && state.errorMessage.isEmpty) {
+          if (context.mounted &&
+              !state.isLoading &&
+              state.errorMessage.isEmpty) {
             Navigator.of(context).pop();
           }
         },
@@ -99,11 +111,9 @@ class _UserRegisterViewState extends ConsumerState<UserRegisterView> {
   }
 
   Widget _buildProfileSection(UserRegisterViewModel viewModel, state) {
-    return Center(
-      child: ProfileImageWidget(
-        imagePath: state.profileImagePath ?? state.userInfo?.profileImageFileName,
-        onTap: () => _showImagePickerOptions(viewModel),
-      ),
+    return ProfileImageWidget(
+      imagePath: state.profileImagePath ?? state.userInfo?.profileImageFileName,
+      onTap: () => _showImagePickerOptions(viewModel),
     );
   }
 
@@ -129,7 +139,7 @@ class _UserRegisterViewState extends ConsumerState<UserRegisterView> {
 
   Widget _buildAuthTypeSection(state) {
     if (state.authTypeDisplayText.isEmpty) return const SizedBox.shrink();
-    
+
     return Text(
       state.authTypeDisplayText,
       style: const TextStyle(
@@ -166,7 +176,8 @@ class _UserRegisterViewState extends ConsumerState<UserRegisterView> {
                 Mtoast.show(context, "카메라 촬영 구현 예정");
               },
             ),
-            if (state.profileImagePath != null || state.userInfo?.profileImageFileName != null)
+            if (state.profileImagePath != null ||
+                state.userInfo?.profileImageFileName != null)
               ListTile(
                 leading: const Icon(Icons.delete, color: Colors.red),
                 title: const Text('사진 삭제', style: TextStyle(color: Colors.red)),

@@ -41,7 +41,9 @@ class MyPageState {
 }
 
 class MyPageViewModel extends StateNotifier<MyPageState> {
-  final KakaoAuthUsecase _kakaoAuthUsecase = KakaoAuthUsecase(KakaoAuthRepositoryImpl());
+  final KakaoAuthUsecase _kakaoAuthUsecase = KakaoAuthUsecase(
+    KakaoAuthRepositoryImpl(),
+  );
   final UserUsecase _userUsecase = UserUsecase(UserRepositoryImpl());
 
   MyPageViewModel() : super(MyPageState());
@@ -81,17 +83,14 @@ class MyPageViewModel extends StateNotifier<MyPageState> {
     try {
       await _kakaoAuthUsecase.logout();
       HttpClient().clearToken();
-      
+
       state = state.copyWith(
         isLoggedIn: false,
         userInfo: null,
         isLoading: false,
       );
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: '로그아웃 실패: $e',
-      );
+      state = state.copyWith(isLoading: false, errorMessage: '로그아웃 실패: $e');
     }
   }
 
@@ -100,10 +99,7 @@ class MyPageViewModel extends StateNotifier<MyPageState> {
 
     try {
       final userInfo = await _userUsecase.getUserInfo();
-      state = state.copyWith(
-        userInfo: userInfo,
-        isLoading: false,
-      );
+      state = state.copyWith(userInfo: userInfo, isLoading: false);
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
@@ -112,15 +108,23 @@ class MyPageViewModel extends StateNotifier<MyPageState> {
     }
   }
 
-  void navigateToUserRegister(BuildContext context) {
-    Navigator.of(context).push(
+  void navigateToUserRegister(BuildContext context) async {
+    await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => UserRegisterView(userInfo: state.userInfo),
       ),
     );
+
+    refreshData();
+  }
+
+  void refreshData() {
+    checkLoginStatus();
+    getUserInfo();
   }
 }
 
-final myPageViewModelProvider = StateNotifierProvider<MyPageViewModel, MyPageState>((ref) {
-  return MyPageViewModel();
-});
+final myPageViewModelProvider =
+    StateNotifierProvider<MyPageViewModel, MyPageState>((ref) {
+      return MyPageViewModel();
+    });

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:meong_g/core/domain/entities/user_info.dart';
 import 'package:meong_g/core/domain/repositories/user_repository.dart';
 import 'package:meong_g/core/network/api_config.dart';
@@ -10,19 +9,11 @@ class UserRepositoryImpl implements UserRepository {
   Future<UserInfo> getUserInfo() async {
     final HttpClient httpClient = HttpClient();
 
-    // 디버깅: 토큰 확인
-    print("HttpClient 토큰: ${httpClient.token}");
-
     try {
       final response = await httpClient.get(ApiConfig.userInfo);
 
-      // 디버깅: 요청 정보 출력
-      print("요청 URL: ${ApiConfig.userInfo}");
-      print("응답 상태 코드: ${response.statusCode}");
-      print("응답 내용: ${response.body}");
-
       if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonMap = jsonDecode(response.body);
+        final Map<String, dynamic> jsonMap = response.data;
 
         final dto = UserInfoDto.fromJson(jsonMap);
 
@@ -41,6 +32,36 @@ class UserRepositoryImpl implements UserRepository {
       }
     } catch (e) {
       throw Exception('Network error during getUserInfo: $e');
+    }
+  }
+
+  @override
+  Future<void> updateUserInfo(UserInfo userInfo) async {
+    final HttpClient httpClient = HttpClient();
+
+    try {
+      final requestBody = userInfo.toJson();
+      final response = await httpClient.putMultipart(
+        ApiConfig.userInfo,
+        requestBody,
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonMap = response.data;
+        final dto = UserInfoDto.fromJson(jsonMap);
+
+        if (dto.error != null) {
+          throw dto.error!;
+        }
+        return;
+      } else {
+        final errorBody = response.data != null
+            ? response.data.toString()
+            : 'No response body';
+        throw Exception('HTTP ${response.statusCode}: $errorBody');
+      }
+    } catch (e) {
+      rethrow; // 원본 에러를 다시 던짐
     }
   }
 }

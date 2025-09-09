@@ -21,4 +21,17 @@ class UserInfo {
       authType: AuthType.fromString(json['authType'] as String?),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    final json = <String, dynamic>{
+      'nickname': nickname,
+      'introduction': introduction,
+    };
+
+    if (profileImageFileName != null && profileImageFileName!.isNotEmpty) {
+      json['imageFile'] = profileImageFileName;
+    }
+
+    return json;
+  }
 }

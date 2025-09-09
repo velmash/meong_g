@@ -1,74 +1,96 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'api_config.dart';
 
 class HttpClient {
   static final HttpClient _instance = HttpClient._internal();
   factory HttpClient() => _instance;
-  HttpClient._internal();
+  HttpClient._internal() {
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: ApiConfig.baseUrl,
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+        headers: ApiConfig.defaultHeaders,
+        validateStatus: (status) => status != null && status < 500, // 400번대 에러도 응답으로 받기
+      ),
+    );
+  }
 
+  late final Dio _dio;
   String? _accessToken;
 
   // 토큰 설정
   void setToken(String? token) {
-    print("HttpClient.setToken() 호출 - 인스턴스: ${this.hashCode}, 토큰: ${token?.substring(0, 20)}...");
     _accessToken = token;
+    _updateAuthHeader();
   }
 
   // 토큰 제거
   void clearToken() {
     _accessToken = null;
+    _updateAuthHeader();
   }
 
   // 토큰 가져오기
   String? get token {
-    print("HttpClient.token getter 호출 - 인스턴스: ${this.hashCode}, 토큰: ${_accessToken?.substring(0, 20)}...");
     return _accessToken;
   }
 
-  // 헤더 생성 (저장된 토큰 또는 파라미터 토큰 사용)
-  Map<String, String> _getHeaders({String? token}) {
-    final effectiveToken = token ?? _accessToken;
-    return effectiveToken != null 
-      ? ApiConfig.authHeaders(effectiveToken)
-      : ApiConfig.defaultHeaders;
+  // Authorization 헤더 업데이트
+  void _updateAuthHeader() {
+    if (_accessToken != null) {
+      _dio.options.headers['Authorization'] = 'Bearer $_accessToken';
+    } else {
+      _dio.options.headers.remove('Authorization');
+    }
   }
 
-  Future<http.Response> get(String endpoint, {String? token}) async {
-    final url = Uri.parse('${ApiConfig.baseUrl}$endpoint');
-    final headers = _getHeaders(token: token);
-    return await http.get(url, headers: headers);
+  Future<Response> get(String endpoint) async {
+    return await _dio.get(endpoint);
   }
 
-  Future<http.Response> post(String endpoint, {
+  Future<Response> post(
+    String endpoint, {
     Map<String, dynamic>? body,
-    String? token,
+    bool isMultipart = false,
   }) async {
-    final url = Uri.parse('${ApiConfig.baseUrl}$endpoint');
-    final headers = _getHeaders(token: token);
-    return await http.post(
-      url,
-      headers: headers,
-      body: body != null ? jsonEncode(body) : null,
-    );
+    if (isMultipart && body != null) {
+      final formData = FormData.fromMap(body);
+      return await _dio.post(endpoint, data: formData);
+    }
+
+    return await _dio.post(endpoint, data: body);
   }
 
-  Future<http.Response> put(String endpoint, {
+  Future<Response> put(
+    String endpoint, {
     Map<String, dynamic>? body,
-    String? token,
+    bool isMultipart = false,
   }) async {
-    final url = Uri.parse('${ApiConfig.baseUrl}$endpoint');
-    final headers = _getHeaders(token: token);
-    return await http.put(
-      url,
-      headers: headers,
-      body: body != null ? jsonEncode(body) : null,
-    );
+    if (isMultipart && body != null) {
+      final formData = FormData.fromMap(body);
+      return await _dio.put(endpoint, data: formData);
+    }
+
+    return await _dio.put(endpoint, data: body);
   }
 
-  Future<http.Response> delete(String endpoint, {String? token}) async {
-    final url = Uri.parse('${ApiConfig.baseUrl}$endpoint');
-    final headers = _getHeaders(token: token);
-    return await http.delete(url, headers: headers);
+  Future<Response> delete(String endpoint) async {
+    return await _dio.delete(endpoint);
+  }
+
+  // Multipart 전용 메소드들 (호환성 유지)
+  Future<Response> putMultipart(
+    String endpoint,
+    Map<String, dynamic> body,
+  ) async {
+    final formData = FormData.fromMap(body);
+    return await _dio.put(
+      endpoint, 
+      data: formData,
+      options: Options(
+        validateStatus: (status) => status != null && status < 500,
+      ),
+    );
   }
 }

@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:meong_g/core/theme/app_styles.dart';
-import 'package:meong_g/core/theme/m_toast.dart';
 
 class ProfileImageWidget extends StatelessWidget {
   final String? imagePath;
   final VoidCallback onTap;
 
-  const ProfileImageWidget({
-    super.key,
-    this.imagePath,
-    required this.onTap,
-  });
+  const ProfileImageWidget({super.key, this.imagePath, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

@@ -9,4 +9,8 @@ class UserUsecase {
   Future<UserInfo> getUserInfo() async {
     return _repository.getUserInfo();
   }
+
+  Future<void> updateUserInfo(UserInfo userInfo) async {
+    return _repository.updateUserInfo(userInfo);
+  }
 }

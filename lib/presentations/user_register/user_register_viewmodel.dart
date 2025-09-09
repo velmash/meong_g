@@ -37,19 +37,21 @@ class UserRegisterViewModel extends StateNotifier<UserRegisterState> {
     state = state.copyWith(isLoading: true, errorMessage: '');
 
     try {
-      // TODO: 실제 유저 정보 업데이트 API 호출
-      await Future.delayed(const Duration(milliseconds: 500));
-
       final updatedUserInfo = UserInfo(
         nickname: state.name,
         introduction: state.introduction,
-        profileImageFileName: state.profileImagePath ?? state.userInfo?.profileImageFileName,
+        profileImageFileName: state.profileImagePath ?? '',
         authType: state.userInfo?.authType,
       );
 
+      await _userUsecase.updateUserInfo(updatedUserInfo);
+
       state = state.copyWith(isLoading: false, userInfo: updatedUserInfo);
     } catch (e) {
-      state = state.copyWith(isLoading: false, errorMessage: '프로필 저장에 실패했습니다: $e');
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: '프로필 저장에 실패했습니다: $e',
+      );
     }
   }
 
@@ -66,6 +68,12 @@ class UserRegisterViewModel extends StateNotifier<UserRegisterState> {
   }
 }
 
-final userRegisterViewModelProvider = StateNotifierProvider.family<UserRegisterViewModel, UserRegisterState, UserInfo?>(
-  (ref, initialUserInfo) => UserRegisterViewModel(initialUserInfo: initialUserInfo),
-);
+final userRegisterViewModelProvider =
+    StateNotifierProvider.family<
+      UserRegisterViewModel,
+      UserRegisterState,
+      UserInfo?
+    >(
+      (ref, initialUserInfo) =>
+          UserRegisterViewModel(initialUserInfo: initialUserInfo),
+    );

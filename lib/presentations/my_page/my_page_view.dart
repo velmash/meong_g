@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meong_g/core/theme/app_styles.dart';
+
 import 'my_page_viewmodel.dart';
 import 'widgets/my_page_header_view.dart';
 import 'widgets/user_profile_card_view.dart';
@@ -20,8 +21,7 @@ class _MyPageViewState extends ConsumerState<MyPageView> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final viewModel = ref.read(myPageViewModelProvider.notifier);
-      viewModel.checkLoginStatus();
-      viewModel.getUserInfo();
+      viewModel.refreshData();
     });
   }
 
@@ -52,7 +52,8 @@ class _MyPageViewState extends ConsumerState<MyPageView> {
 
             PetSectionView(
               petCount: state.petCount,
-              onAddPetTap: () => Navigator.of(context).pushNamed('/pet-register'),
+              onAddPetTap: () =>
+                  Navigator.of(context).pushNamed('/pet-register'),
             ),
 
             const SizedBox(height: 20),
