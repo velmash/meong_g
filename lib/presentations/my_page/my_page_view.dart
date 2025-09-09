@@ -45,7 +45,7 @@ class _MyPageViewState extends ConsumerState<MyPageView> {
               UserProfileCardView(
                 nickname: state.userInfo?.nickname,
                 introduction: state.userInfo?.introduction,
-                onEditTap: () => Navigator.of(context).pushNamed('/user-register'),
+                onEditTap: () => viewModel.navigateToUserRegister(context),
               ),
 
             const SizedBox(height: 28),

@@ -1,8 +1,10 @@
+import 'auth_type.dart';
+
 class UserInfo {
   final String? nickname;
   final String? introduction;
   final String? profileImageFileName;
-  final String? authType;
+  final AuthType? authType;
 
   UserInfo({
     required this.nickname,
@@ -16,7 +18,7 @@ class UserInfo {
       nickname: json['nickname'] as String?,
       introduction: json['introduction'] as String?,
       profileImageFileName: json['profileImageFileName'] as String?,
-      authType: json['authType'] as String?,
+      authType: AuthType.fromString(json['authType'] as String?),
     );
   }
 }

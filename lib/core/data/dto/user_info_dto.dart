@@ -1,5 +1,6 @@
 import 'package:meong_g/core/data/dto/response_error.dart';
 import 'package:meong_g/core/domain/entities/user_info.dart';
+import 'package:meong_g/core/domain/entities/auth_type.dart';
 
 class UserInfoDto {
   final String? result;
@@ -27,7 +28,7 @@ class UserInfoDto {
       nickname: data!.nickname,
       introduction: data!.introduction,
       profileImageFileName: data!.profileImageFileName,
-      authType: data!.authType ?? '',
+      authType: AuthType.fromString(data!.authType),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meong_g/core/data/repositories/user_repository_impl.dart';
 import 'package:meong_g/core/domain/entities/user_info.dart';
@@ -5,6 +6,7 @@ import 'package:meong_g/core/domain/usecases/user_usecase.dart';
 import '../../core/domain/usecases/kakao_auth_usecase.dart';
 import '../../core/data/repositories/kakao_auth_repository_impl.dart';
 import '../../core/network/http_client.dart';
+import '../user_register/user_register_view.dart';
 
 class MyPageState {
   final bool isLoggedIn;
@@ -108,6 +110,14 @@ class MyPageViewModel extends StateNotifier<MyPageState> {
         errorMessage: 'getUserInfo 에러: $e',
       );
     }
+  }
+
+  void navigateToUserRegister(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => UserRegisterView(userInfo: state.userInfo),
+      ),
+    );
   }
 }
 
